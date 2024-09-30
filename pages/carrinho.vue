@@ -2,20 +2,15 @@
   <v-app>
     <div>
       <NavBarAuth></NavBarAuth>
-      <v-main class="bg-grey-lighten-2  fill-height">
-        <v-container class="bg-grey-lighten-4 "  >
+      <v-main class="bg-grey-lighten-2 fill-height">
+        <v-container class="bg-grey-lighten-4">
           <h1>Carrinho:</h1>
           <div v-if="storedProducts.length > 0">
             <h3>Produtos Armazenados:</h3>
             <v-list>
               <v-list-item-group>
-                <v-list-item
-                  v-for="item in storedProducts"
-                  :key="item.product_id"
-                  
-                >
-                  <v-img :src="item.img" aspect-ratio="1"  contain class="item-image"></v-img>
-                 
+                <v-list-item v-for="item in storedProducts" :key="item.product_id">
+                  <v-img :src="item.img" aspect-ratio="1" contain class="item-image"></v-img>
                   <v-list-item-content class="product-item">
                     <div class="item-info">
                       <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -53,12 +48,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useNuxtApp } from '#app';
 
-
 const storedProducts = ref([]);
-
 
 const loadProducts = async () => {
   const { $supabase } = useNuxtApp();
@@ -81,13 +74,9 @@ const loadProducts = async () => {
 
   storedProducts.value = products.map(product => ({
     ...product,
-    quantity: 1 
+    quantity: 1,
   }));
 };
-
-
-loadProducts();
-
 
 const changeQuantity = (item, delta) => {
   item.quantity += delta;
@@ -100,9 +89,34 @@ const totalCartValue = computed(() => {
   return storedProducts.value.reduce((total, item) => total + (item.price * item.quantity), 0);
 });
 
-const removeProduct = (productId) => {
-  storedProducts.value = storedProducts.value.filter(item => item.product_id !== productId);
+const removeProduct = async (productId) => {
+  const { $supabase } = useNuxtApp();
+  const { data: { user }, error: userError } = await $supabase.auth.getUser();
+
+  if (userError || !user) {
+    console.error('Usuário não autenticado');
+    return;
+  }
+
+  console.log('Removendo produto:', productId); 
+  console.log('Usuário ID:', user.id); 
+
+  const { error } = await $supabase
+    .from('carrinhos')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('product_id', productId);
+
+  if (error) {
+    console.error('Erro ao remover produto do carrinho:', error.message);
+  } else {
+    console.log('Produto removido com sucesso:', productId);
+    storedProducts.value = storedProducts.value.filter(item => item.product_id !== productId);
+    console.log('Produtos restantes:', storedProducts.value);
+    await loadProducts();
+  }
 };
+
 
 const clearCart = async () => {
   const { $supabase } = useNuxtApp();
@@ -122,12 +136,11 @@ const clearCart = async () => {
     console.error('Erro ao limpar o carrinho:', error.message);
   } else {
     console.log('Carrinho limpo com sucesso.');
+    storedProducts.value = [];
   }
-
-  storedProducts.value = [];
 };
 
-
+onMounted(loadProducts);
 </script>
 
 <style scoped>
@@ -136,15 +149,12 @@ const clearCart = async () => {
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid #ccc;
-  height: 70%
-
+  height: 70%;
 }
 
 .item-image {
-  
   height: 100px;
   margin-left: 50rem; 
-  
 }
 .item-info {
   flex: 0.5; 

@@ -35,7 +35,6 @@ export default {
   },
   methods: {
     async adicionarAoCarrinho() {
-      const { $cookies } = useNuxtApp();
       const { $supabase } = useNuxtApp();
       const { data: { user }, error: userError } = await $supabase.auth.getUser();
 
@@ -55,15 +54,12 @@ export default {
       };
 
       try {
-        // Adiciona o produto ao banco de dados
+        
         await $supabase.from('carrinhos').insert([produto]);
 
-        // Atualiza os produtos no cookie
-        const currentProducts = JSON.parse($cookies.get('cartProducts') || '[]');
-        currentProducts.push(produto);
-        $cookies.set('cartProducts', JSON.stringify(currentProducts), { expires: 7 });
         
         console.log('Produto adicionado ao carrinho:', produto);
+        return;
       } catch (error) {
         console.error('Erro ao adicionar produto ao carrinho:', error.message);
       }

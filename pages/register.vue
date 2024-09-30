@@ -105,7 +105,7 @@ export default {
                
                 const { data, insertError } = await $supabase
                     .from('users')
-                    .insert([{ username: this.user.username, email: this.user.email, password: this.user.password }]);
+                    .insert([{ username: this.user.username, email: this.user.email, password: this.user.password}]);
 
                 if (insertError) {
                     alert(insertError.message);
