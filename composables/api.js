@@ -20,20 +20,7 @@
 
 import { useNuxtApp } from '#app';
 
-export const fetchCartItems = async (userId) => {
-  const { $supabase } = useNuxtApp();
-  
-  const { data, error } = await $supabase
-      .from('carrinhos')
-      .select('*')
-      .eq('user_id', userId);
 
-  if (error) {
-      console.error('Erro ao buscar itens do carrinho:', error);
-      return [];
-  }
-  return data;
-};
 
 export const fetchProducts = async () => {
     const { $supabase } = useNuxtApp();
@@ -54,7 +41,8 @@ export async function fetchProductById(id) {
       .from('products')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
+      
   
     if (error) {
       console.error('Erro ao buscar produto:', error);
@@ -62,4 +50,19 @@ export async function fetchProductById(id) {
     }
   
     return data; 
+};
+export async function fetchProductByUser(userId) {
+  const { $supabase } = useNuxtApp();
+  const { data, error } = await $supabase
+    .from('products')
+    .select('*')
+    .eq('user_id', userId)
+    
+
+  if (error) {
+    console.error('Erro ao buscar produto:', error);
+    return null; 
+  }
+
+  return data; 
 };

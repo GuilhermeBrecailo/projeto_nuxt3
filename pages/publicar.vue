@@ -95,7 +95,7 @@ const submitProduct = async () => {
   console.error('Usuário não está autenticado ou erro ao obter usuário:', userError);
   return;
 }
-if (produto.price > 99999999.99) {
+if (product.price > 99999999.99) {
             console.error('Preço excede o limite permitido.');
             return;
         }

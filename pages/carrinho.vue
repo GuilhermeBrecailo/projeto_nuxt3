@@ -2,41 +2,46 @@
   <v-app>
     <div>
       <NavBarAuth></NavBarAuth>
-      <v-main class="bg-grey-lighten-2 fill-height">
+      <v-main class="bg-grey-lighten-2 ">
         <v-container class="bg-grey-lighten-4">
           <h1>Carrinho:</h1>
           <div v-if="storedProducts.length > 0">
-            <h3>Produtos Armazenados:</h3>
-            <v-list>
-              <v-list-item-group>
-                <v-list-item v-for="item in storedProducts" :key="item.product_id">
-                  <v-img :src="item.img" aspect-ratio="1" contain class="item-image"></v-img>
-                  <v-list-item-content class="product-item">
-                    <div class="item-info">
-                      <v-list-item-title>{{ item.name }}</v-list-item-title>
-                      <v-list-item-subtitle>
-                        Preço: R$ {{ item.price }} | 
-                        Quantidade: 
-                        <v-btn @click="changeQuantity(item, -1)" icon small>
-                          <v-icon small>mdi-minus</v-icon>
-                        </v-btn>
-                        {{ item.quantity }}
-                        <v-btn @click="changeQuantity(item, 1)" icon small>
-                          <v-icon small>mdi-plus</v-icon>
-                        </v-btn>
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle>
-                        Total: R$ {{ (item.price * item.quantity).toFixed(2) }}
-                      </v-list-item-subtitle>
-                    </div>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
+            <v-row>
+              <v-col
+                v-for="item in storedProducts"
+                :key="item.product_id"
+                cols="12"
+              >
+                <v-card>
+                  <v-card-title>
+                    <v-row>
+                      <v-col cols="3">
+                        <v-img :src="item.img" aspect-ratio="1" height="150" contain></v-img>
+                      </v-col>
+                      <v-col cols="9">
+                        <h3>{{ item.name }}</h3>
+                        <p>Preço: R$ {{ item.price }}</p>
+                        <p>
+                          Quantidade: 
+                          <v-btn @click="changeQuantity(item, -1)" icon small>
+                            <v-icon small>mdi-minus</v-icon>
+                          </v-btn>
+                          {{ item.quantity }}
+                          <v-btn @click="changeQuantity(item, 1)" icon small>
+                            <v-icon small>mdi-plus</v-icon>
+                          </v-btn>
+                        </p>
+                        <h4>Total: R$ {{ (item.price * item.quantity).toFixed(2) }}</h4>
+                      </v-col>
+                    </v-row>
+                  </v-card-title>
+                </v-card>
+              </v-col>
+            </v-row>
             <h4>Total do Carrinho: R$ {{ totalCartValue.toFixed(2) }}</h4>
             <v-btn color="red" @click="clearCart">Limpar Carrinho</v-btn>
-            <v-btn class="bg-blue">Continuar comprando</v-btn>
-            <v-btn class="bg-green">Finalizar compra</v-btn>
+            <v-btn class="bg-blue" to="/">Continuar comprando</v-btn>
+            <v-btn class="bg-green" to="/checkout">Finalizar compra</v-btn>
           </div>
           <div v-else>
             <p>Nenhum produto encontrado no carrinho.</p>
@@ -137,6 +142,7 @@ const clearCart = async () => {
   } else {
     console.log('Carrinho limpo com sucesso.');
     storedProducts.value = [];
+    console.log('Carrinho limpo com sucesso');
   }
 };
 

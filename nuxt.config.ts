@@ -18,6 +18,9 @@ export default defineNuxtConfig({
   buildModules: [
     '@nuxtjs/vuetify',
   ],
+  router: {
+    middleware: ['auth']
+  }
   
   
  
