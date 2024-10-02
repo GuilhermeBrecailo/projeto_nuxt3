@@ -21,6 +21,20 @@
 import { useNuxtApp } from '#app';
 
 
+export async function storePayment(id, amount) {
+  const { $supabase } = useNuxtApp();
+
+  const { data, error } = await $supabase
+      .from('payments')
+      .insert([{ id, amount, status: 'succeeded' }]);
+  
+  if (error) {
+      console.error('Erro ao armazenar pagamento:', error);
+  }
+  
+  return data; // Retorna os dados da inserção, se necessário
+}
+
 
 export const fetchProducts = async () => {
     const { $supabase } = useNuxtApp();
@@ -51,6 +65,18 @@ export async function fetchProductById(id) {
   
     return data; 
 };
+export async function updateProduct(id, product) {
+  const { $supabase } = useNuxtApp();
+
+  const { error } = await $supabase
+    .from('products')
+    .update(product)
+    .eq('id', id);
+
+  if (error) {
+    throw new Error('Erro ao atualizar produto: ' + error.message);
+  }
+}
 export async function fetchProductByUser(userId) {
   const { $supabase } = useNuxtApp();
   const { data, error } = await $supabase
@@ -65,4 +91,5 @@ export async function fetchProductByUser(userId) {
   }
 
   return data; 
+ 
 };

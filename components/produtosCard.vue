@@ -15,7 +15,7 @@
       </v-card-title>
       <v-card-actions class="justify-end">
         <v-btn
-        :to="{ name: 'product-id', params: { id: product.id } }"
+        :to="{ name: 'products-id', params: { id: product.id } }"
         color="primary bg-blue"
         text
         >
@@ -43,6 +43,8 @@ export default {
         return;
       }
 
+ 
+
       const produto = {
         user_id: user.id,
         product_id: this.product.id,
@@ -57,7 +59,7 @@ export default {
         
         await $supabase.from('carrinhos').insert([produto]);
 
-        
+        alert('Produto adicionado ao carrinho')
         console.log('Produto adicionado ao carrinho:', produto);
         return;
       } catch (error) {

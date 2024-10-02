@@ -6,7 +6,7 @@
             </div>
         </div>
         <v-main class="bg-grey-lighten-2">
-            <v-container class="bg-grey-lighten-4" >
+          <v-container class="bg-grey-lighten-4" >
                 
                 <h1>Meus produtos</h1>
 

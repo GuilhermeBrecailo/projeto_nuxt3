@@ -18,7 +18,7 @@
     "js-cookie": "^3.0.5",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
-    "stripe": "^16.11.0",
+    "stripe": "^16.12.0",
     "vue": "latest",
     "vue-cookies": "^1.8.4",
     "vue-router": "latest",

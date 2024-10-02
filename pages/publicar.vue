@@ -6,9 +6,8 @@
      <div>
          <NavBarAuth></NavBarAuth>
      </div>
-     <v-main>
-
-         <v-container>
+     <v-main class="bg-grey-lighten-2">
+      <v-container class="bg-grey-lighten-4" >
              <v-row justify="center">
                 <v-col cols="12" md="6">
                     <v-card class="pa-4" outilned>

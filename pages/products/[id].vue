@@ -80,6 +80,8 @@ async function adicionarAoCarrinho() {
   try {
     await $supabase.from('carrinhos').insert([produto]);
     console.log('Produto adicionado ao carrinho:', produto);
+    alert('Produto adicionado ao carrinho')
+
   } catch (error) {
     console.error('Erro ao adicionar produto ao carrinho:', error.message);
   }

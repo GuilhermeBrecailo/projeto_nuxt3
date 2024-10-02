@@ -41,7 +41,7 @@
             <h4>Total do Carrinho: R$ {{ totalCartValue.toFixed(2) }}</h4>
             <v-btn color="red" @click="clearCart">Limpar Carrinho</v-btn>
             <v-btn class="bg-blue" to="/">Continuar comprando</v-btn>
-            <v-btn class="bg-green" to="/checkout">Finalizar compra</v-btn>
+            <v-btn class="bg-green" to="/payment">Finalizar compra</v-btn>
           </div>
           <div v-else>
             <p>Nenhum produto encontrado no carrinho.</p>
@@ -87,6 +87,7 @@ const changeQuantity = (item, delta) => {
   item.quantity += delta;
   if (item.quantity < 1) {
     removeProduct(item.product_id);
+    
   }
 };
 
@@ -141,6 +142,7 @@ const clearCart = async () => {
     console.error('Erro ao limpar o carrinho:', error.message);
   } else {
     console.log('Carrinho limpo com sucesso.');
+    alert("Carrinho limpo com sucesso")
     storedProducts.value = [];
     console.log('Carrinho limpo com sucesso');
   }

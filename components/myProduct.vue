@@ -16,16 +16,20 @@
         </v-row>
       </v-card-title>
       <v-card-actions class="justify-end">
-        <v-btn class="bg-red" @click="removeProduct">Apagar</v-btn>
+        <v-btn class="bg-red" @click="removeProduct(product.id)">Apagar</v-btn>
         <v-btn
-        :to="{ name: 'product-id', params: { id: product.id } }"
+        :to="{ name: 'products-id', params: { id: product.id } }"
         color="primary bg-blue"
         text
         >
         Ver Detalhes
       </v-btn>
-      <v-btn color=" bg-green" >Editar</v-btn>
-      
+      <v-btn :to="`/products/${product.id}.edit`" color="white" class="bg-green">Editar</v-btn>
+
+
+
+
+
     </v-card-actions>
     </v-card>
   </v-container>
@@ -37,35 +41,34 @@ export default {
  
     product: Object,
   
-  }
-}
-
-const removeProduct = async (productId) => {
-  const { $supabase } = useNuxtApp();
-  const { data: { user }, error: userError } = await $supabase.auth.getUser();
-
-  if (userError || !user) {
-    console.error('Usuário não autenticado');
-    return;
-  }
-
-  console.log('Removendo produto:', productId); 
-  console.log('Usuário ID:', user.id); 
-
-  const { error } = await $supabase
-    .from('products')
-    .delete()
-    .eq('user_id', user.id)
+  },
+  methods: {
     
+    async removeProduct(productId) {
+      const { $supabase } = useNuxtApp();
+      const { data: { user }, error: userError } = await $supabase.auth.getUser();
 
-  if (error) {
-    console.error('Erro ao remover produto :', error.message);
-  } else {
-    console.log('Produto removido com sucesso:', productId);
-    storedProducts.value = storedProducts.value.filter(item => item.product_id !== productId);
-    console.log('Produtos restantes:', storedProducts.value);
-    await loadProducts();
-  }
+      if (userError || !user) {
+        console.error('Usuário não autenticado');
+        return;
+      }
+
+      console.log('Removendo produto:', productId);
+      console.log('Usuário ID:', user.id);
+
+      const { error } = await $supabase
+        .from('products')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('id', productId); 
+
+      if (error) {
+        console.error('Erro ao remover produto:', error.message);
+      } else {
+        console.log('Produto removido com sucesso:', productId);
+       
+      }
+    },
+  },
 };
 </script>
-

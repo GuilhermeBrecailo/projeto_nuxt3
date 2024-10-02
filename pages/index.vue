@@ -6,18 +6,24 @@
        <div>
         <NavBarAuth v-if="isAuthenticated" :isAuthenticated="isAuthenticated" @logout="logout"></NavBarAuth>
         <NavBar v-else :isAuthenticated="isAuthenticated" @logout="logout"></NavBar>
-       </div>
-       
-        
-       <v-main class="bg-grey-lighten-2">
+      </div>
+      
+      
+      <v-main class="bg-grey-lighten-2">
         <v-container class="bg-grey-lighten-4" >
+          
             <v-row dense>
               <v-col
               >
+              <v-text-field
+              v-model="searchQuery"
+              label="Pesquisar produtos"
+              solo
+            ></v-text-field>
               <ul>
                 
                   <produtos-card
-                 v-for="product in products"
+                 v-for="product in filteredProducts"
                    :key="product.id"
                   :product="product"
                   
@@ -27,7 +33,7 @@
               </ul>
               </v-col>
             </v-row>
-            
+            <FooterF></FooterF>
           </v-container>
         </v-main>
       </v-layout>
@@ -46,7 +52,7 @@ import { fetchProducts } from '~/composables/api';
       return{
         isAuthenticated: false,
         products: [],
-      
+        searchQuery: ''
       };
     },
     mounted() {
@@ -64,6 +70,19 @@ import { fetchProducts } from '~/composables/api';
 
       this.loadProducts()
     },
+    computed:{
+      filteredProducts() {
+      if (!this.searchQuery) {
+        return this.products;  
+      }
+      const query = this.searchQuery.toLowerCase();
+      return this.products.filter(product => {
+        return product.name.toLowerCase().includes(query) || 
+               product.description.toLowerCase().includes(query);
+      });
+     },
+   },
+    
   methods: {
 
     
