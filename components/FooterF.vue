@@ -8,7 +8,7 @@
               <v-btn text href="/sobre">Sobre</v-btn>
               <v-btn text href="/contato">Contato</v-btn>
               <v-btn text href="/privacidade">Política de Privacidade</v-btn>
-              <v-btn icon @click="scrollToTop">
+              <v-btn icon @click="$emit('scroll-to-top')" >
                 <v-icon>mdi-arrow-up</v-icon>
               </v-btn>
             </div>

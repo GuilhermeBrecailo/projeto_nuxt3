@@ -77,19 +77,28 @@ const loadProducts = async () => {
     return;
   }
 
-  storedProducts.value = products.map(product => ({
-    ...product,
-    quantity: 1,
-  }));
+  products.forEach(product => {
+    const existingProduct = storedProducts.value.find(item => item.product_id === product.product_id);
+    if (existingProduct) {
+      // Se o produto já existe, aumente a quantidade
+      existingProduct.quantity += 1;
+    } else {
+      // Caso contrário, adicione o produto ao carrinho
+      storedProducts.value.push({
+        ...product,
+        quantity: 1,
+      });
+    }
+  });
 };
 
 const changeQuantity = (item, delta) => {
   item.quantity += delta;
   if (item.quantity < 1) {
     removeProduct(item.product_id);
-    
   }
 };
+
 
 const totalCartValue = computed(() => {
   return storedProducts.value.reduce((total, item) => total + (item.price * item.quantity), 0);

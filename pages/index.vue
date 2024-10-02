@@ -33,7 +33,7 @@
               </ul>
               </v-col>
             </v-row>
-            <FooterF></FooterF>
+             <FooterF @scroll-to-top="scrollToTop"></FooterF>
           </v-container>
         </v-main>
       </v-layout>
@@ -84,7 +84,9 @@ import { fetchProducts } from '~/composables/api';
    },
     
   methods: {
-
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
     
     async loadProducts() {
       this.products = await fetchProducts();

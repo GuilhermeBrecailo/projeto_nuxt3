@@ -32,7 +32,7 @@ export async function storePayment(id, amount) {
       console.error('Erro ao armazenar pagamento:', error);
   }
   
-  return data; // Retorna os dados da inserção, se necessário
+  return data; 
 }
 
 

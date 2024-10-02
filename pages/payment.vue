@@ -1,7 +1,8 @@
 <template>
     <v-app>
       <div>
-        <NavBarAuth></NavBarAuth>
+        <NavBarAuth :isAuthenticated="isAuthenticated"></NavBarAuth>
+
         <v-main class="bg-grey-lighten-2">
           <v-container class="bg-grey-lighten-4">
             <h1>Pagamento com Stripe</h1>
@@ -40,7 +41,7 @@
                     <div id="card-errors" role="alert"></div>
                   </v-card-text>
                   <v-card-actions>
-                    <v-btn type="submit">Pagar</v-btn>
+                    <v-btn type="submit" class="bg-green">Pagar</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-form>
@@ -59,6 +60,9 @@
   import { ref, computed, onMounted } from 'vue';
   import { loadStripe } from '@stripe/stripe-js';
   import { useNuxtApp } from '#app';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
   
   const storedProducts = ref([]);
   const frete = ref(0);
@@ -68,6 +72,13 @@
   const stripe = ref(null);
   const card = ref(null);
   const installmentOptions = [1, 2, 3, 4, 5, 6];
+
+  const props = defineProps({
+  isAuthenticated: {
+    type: Boolean,
+    required: true,
+  },
+});
   
   const loadProducts = async () => {
     const { $supabase } = useNuxtApp();
@@ -131,20 +142,46 @@
     message.value = error.message;
   } else {
     message.value = 'Pagamento bem-sucedido!';
+
+    await clearCart();
+    router.push('/sucessPag'); 
     await storePayment(paymentIntent.id, paymentIntent.amount);
+    alert('Pagamento bem-sucedido!')
+  }
+};
+
+const clearCart = async () => {
+  const { $supabase } = useNuxtApp();
+  const { data: { user }, error: userError } = await $supabase.auth.getUser();
+
+  if (userError || !user) {
+    console.error('Usuário não autenticado');
+    return;
+  }
+
+  const { error } = await $supabase
+    .from('carrinhos')
+    .delete()
+    .eq('user_id', user.id);
+
+  if (error) {
+    console.error('Erro ao limpar o carrinho:', error.message);
+  } else {
+    console.log('Carrinho limpo com sucesso.');
+    storedProducts.value = [];
   }
 };
 
 const createPaymentIntent = async () => {
   const response = await fetch('/api/create-payment', {
-    method: 'POST',
+    method: 'POST',  
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ amount: totalWithFrete.value * 100 }),
+    body: JSON.stringify({ amount: totalWithFrete.value * 100 }), 
   });
   const data = await response.json();
-  
+
   if (data && data.clientSecret) {
     return data.clientSecret;
   } else {
@@ -153,19 +190,21 @@ const createPaymentIntent = async () => {
   }
 };
 
+
   
   const storePayment = async (id, amount) => {
-    const { $supabase } = useNuxtApp();
-    const result = await $supabase
-      .from('payments')
-      .insert([{ id, amount, status: 'succeeded' }]);
-  
-    if (result.error) {
-      console.error('Erro ao armazenar pagamento:', result.error.message);
-    } else {
-      console.log('Pagamento armazenado com sucesso:', result.data);
-    }
-  };
+  const { $supabase } = useNuxtApp();
+
+  const { data, error } = await $supabase
+    .from('payments')
+    .insert([{ id, amount, status: 'succeeded' }]);
+
+  if (error) {
+    console.error('Erro ao armazenar pagamento:', error.message);
+  } else {
+    console.log('Pagamento armazenado com sucesso:', data);
+  }
+};
   
   const calculateFrete = () => {
     if (!cep.value) {

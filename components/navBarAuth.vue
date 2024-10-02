@@ -17,7 +17,8 @@
         </template>
         <v-list>
           <div class="d-flex flex-column">
-            <v-btn to="/meusProdutos">Meus Produtos</v-btn>
+            <v-btn to="/compras">Minhas compras</v-btn>
+            <v-btn to="/meusProdutos">Meus Anuncios</v-btn>
             <v-btn to="/publicar">Anunciar produtos</v-btn>
             <v-btn @click="logout">Sair</v-btn>
           </div>
