@@ -3,10 +3,10 @@
       <a href="/">
         <v-app-bar-title>
           <img
-            src="https://static.vecteezy.com/ti/vetor-gratis/p1/6240761-inicial-letra-b-tech-logo-design-template-element-eps10-vector-vetor.jpg"
+            src="https://i.pinimg.com/736x/81/b8/1b/81b81b38c72e148ce4ddfcae172733f0.jpg"
             alt=""
             width="60px"
-            class="border-bottom logo-img"
+            class="border-bottom logo-img rounded-lg"
           />
         </v-app-bar-title>
       </a>
