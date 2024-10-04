@@ -66,6 +66,8 @@ export default {
         console.error('Erro ao remover produto:', error.message);
       } else {
         console.log('Produto removido com sucesso:', productId);
+        
+        
        
       }
     },

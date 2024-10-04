@@ -62,6 +62,7 @@ methods: {
     async loadProducts(userId) {
       this.products = await fetchProductByUser(userId);
       console.log('Produtos carregados',this.products)
+     
     },
     
   
