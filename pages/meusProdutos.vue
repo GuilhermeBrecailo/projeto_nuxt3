@@ -15,7 +15,7 @@
                     v-for="product in products"
                    :key="product.id"
                   :product="product"
-                 
+                  @product-removed="loadProducts"
                     />
                 </div>
                 
@@ -36,7 +36,7 @@ import { fetchProductByUser } from '~/composables/api';
       return{
         isAuthenticated: false,
         products: [],
-      
+        session: null,
       };
     },
     mounted() {
@@ -46,6 +46,7 @@ import { fetchProductByUser } from '~/composables/api';
     
     $supabase.auth.getSession().then(({ data: { session } }) => {
       this.isAuthenticated = !!session;
+      this.session = session; 
       console.log(this.isAuthenticated);
       console.log('Session:', session);
 
@@ -59,13 +60,16 @@ import { fetchProductByUser } from '~/composables/api';
 methods: {
 
     
-    async loadProducts(userId) {
-      this.products = await fetchProductByUser(userId);
-      console.log('Produtos carregados',this.products)
-     
-    },
+  async loadProducts() {
+    if (this.session && this.session.user) {
+      this.products = await fetchProductByUser(this.session.user.id);
+      console.log('Produtos carregados', this.products);
+    } else {
+      console.error('Usuário não autenticado ou sessão inválida');
+    }
     
   
-  },
-};
+   },
+  }
+   }
 </script>

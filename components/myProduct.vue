@@ -67,7 +67,7 @@ export default {
       } else {
         console.log('Produto removido com sucesso:', productId);
         
-        
+        this.$emit('product-removed', productId);
        
       }
     },
